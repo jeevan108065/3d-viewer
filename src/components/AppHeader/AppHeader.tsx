@@ -27,7 +27,7 @@ const AppHeader: React.FC = ({}) => {
   const AppHeaderRootDivStyles: React.CSSProperties = {
     height: "3rem",
     width: "100lvw",
-    position: "fixed",
+    position: "sticky",
     boxShadow: "0px 0px 5px 0px grey",
     display: "flex",
     alignItems: "center",

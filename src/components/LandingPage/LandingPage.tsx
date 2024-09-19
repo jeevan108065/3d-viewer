@@ -1,6 +1,14 @@
 //#region imports
 import React from "react";
 import AppHeader from "../AppHeader/AppHeader";
+import face from "../../Assets/models/face/preview.png";
+import leg from "../../Assets/models/leg/preview.png";
+import hand from "../../Assets/models/hand/preview.png";
+import Card from "../Card/Card";
+import ThreeDViewer from "../ThreeDViewer";
+import { useGLTF } from "@react-three/drei";
+import { type GLTF } from "three-stdlib";
+import { type ObjectMap } from "@react-three/fiber";
 //#endregion
 
 //#region interfaces & types
@@ -9,6 +17,25 @@ import AppHeader from "../AppHeader/AppHeader";
 //#region Function Component
 const LandingPage: React.FC = ({}) => {
   //#region Component states
+  const [selectedObj, setSelectedObj] = React.useState<string>();
+
+  const cardsList = [
+    {
+      image: face,
+      title: "FACE",
+      obj: `${window.location.origin}/3d-viewer/Assets/models/face/LeePerrySmith.glb`,
+    },
+    {
+      image: leg,
+      title: "LEG",
+      obj: `${window.location.origin}/3d-viewer/Assets/models/leg/leg_prosthesis.glb`,
+    },
+    {
+      image: hand,
+      title: "HAND",
+      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
+    },
+  ];
   //#endregion
 
   //#region Component hooks
@@ -43,6 +70,30 @@ const LandingPage: React.FC = ({}) => {
   return (
     <div>
       <AppHeader />
+      {!selectedObj && (
+        <div style={{ display: "flex" }}>
+          {cardsList.map((item) => {
+            return (
+              <Card
+                imageUrl={item.image}
+                title={item.title}
+                onClick={() => setSelectedObj(item.obj)}
+              />
+            );
+          })}
+        </div>
+      )}
+      {selectedObj && (
+        <div>
+          <ThreeDViewer gltfUrl={selectedObj} />
+          <button
+            style={{ position: "absolute", top: "3.5rem", right: "1rem" }}
+            onClick={() => setSelectedObj(undefined)}
+          >
+            {"Close Model"}
+          </button>
+        </div>
+      )}
     </div>
   );
   //#endregion

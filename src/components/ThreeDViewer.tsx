@@ -5,8 +5,12 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GUI } from "lil-gui";
 import { DecalGeometry } from "three/examples/jsm/geometries/DecalGeometry";
 import Stats from "three/examples/jsm/libs/stats.module";
+import { type GLTF } from "three-stdlib";
+import { type ObjectMap } from "@react-three/fiber";
 
-const ThreeDViewer: React.FC = () => {
+const ThreeDViewer: React.FC<{ gltfUrl?: string }> = ({
+  gltfUrl = "https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb",
+}) => {
   let mesh: any;
   let line: THREE.Line;
   let scene: THREE.Scene;
@@ -14,33 +18,21 @@ const ThreeDViewer: React.FC = () => {
   let stats: Stats;
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   const raycaster = new THREE.Raycaster();
-  const [fileURL, setFileURL] = React.useState<string | null>(null);
   const mountRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    fetchFile();
-  }, []);
-
-  React.useEffect(() => {
+    console.log(gltfUrl);
+    try {
+      mountRef.current?.removeChild(renderer.domElement);
+    } catch (e) {
+      console.log(e);
+    }
     init();
     return () => {
       mountRef.current?.removeChild(renderer.domElement);
     };
-  }, [fileURL]);
+  }, [gltfUrl]);
 
-  const fetchFile = async () => {
-    try {
-      const response = await fetch("../Assets/models/LeePerrySmith.glb");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const file = await response.blob();
-      const blobURL = URL.createObjectURL(file); // Create a Blob URL
-      setFileURL(blobURL);
-    } catch (error) {
-      console.error("Error fetching the file:", error);
-    }
-  };
   const intersection = {
     intersects: false,
     point: new THREE.Vector3(),
@@ -50,18 +42,18 @@ const ThreeDViewer: React.FC = () => {
   const intersects: THREE.Intersection[] = [];
 
   const textureLoader = new THREE.TextureLoader();
-  const decalDiffuse = textureLoader.load(
-    "https://threejs.org/examples/textures/decal/decal-diffuse.png"
-  );
-  decalDiffuse.colorSpace = THREE.SRGBColorSpace;
-  const decalNormal = textureLoader.load(
-    "https://threejs.org/examples/textures/decal/decal-normal.jpg"
-  );
+  // const decalDiffuse = textureLoader.load(
+  //   "https://threejs.org/examples/textures/decal/decal-diffuse.png"
+  // );
+  // decalDiffuse.colorSpace = THREE.SRGBColorSpace;
+  // const decalNormal = textureLoader.load(
+  //   "https://threejs.org/examples/textures/decal/decal-normal.jpg"
+  // );
 
   const decalMaterial = new THREE.MeshPhongMaterial({
     specular: 0x444444,
-    map: decalDiffuse,
-    normalMap: decalNormal,
+    // map: decalDiffuse,
+    // normalMap: decalNormal,
     normalScale: new THREE.Vector2(1, 1),
     shininess: 30,
     transparent: true,
@@ -161,8 +153,8 @@ const ThreeDViewer: React.FC = () => {
       mouse.x = (x / window.innerWidth) * 2 - 1;
       mouse.y = -(y / window.innerHeight) * 2 + 1;
 
-      raycaster.setFromCamera(mouse, camera);
-      raycaster.intersectObject(mesh, false, intersects);
+      // raycaster.setFromCamera(mouse, camera);
+      // raycaster.intersectObject(mesh, false, intersects);
 
       if (intersects.length > 0 && intersects[0].face) {
         const p = intersects[0].point;
@@ -190,45 +182,42 @@ const ThreeDViewer: React.FC = () => {
       }
     }
 
-    const gui = new GUI();
+    // const gui = new GUI();
 
-    gui.add(params, "minScale", 1, 30);
-    gui.add(params, "maxScale", 1, 30);
-    gui.add(params, "rotate");
-    gui.add(params, "clear");
-    gui.open();
+    // gui.add(params, "minScale", 1, 30);
+    // gui.add(params, "maxScale", 1, 30);
+    // gui.add(params, "rotate");
+    // gui.add(params, "clear");
+    // gui.open();
   }
 
   function loadLeePerrySmith() {
-    const map = textureLoader.load(
-      "https://threejs.org/examples/models/gltf/LeePerrySmith/Map-COL.jpg"
-    );
-    map.colorSpace = THREE.SRGBColorSpace;
-    const specularMap = textureLoader.load(
-      "https://threejs.org/examples/models/gltf/LeePerrySmith/Map-SPEC.jpg"
-    );
-    const normalMap = textureLoader.load(
-      "https://threejs.org/examples/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg"
-    );
+    // const map = textureLoader.load();
+    // "https://threejs.org/examples/models/gltf/LeePerrySmith/Map-COL.jpg"
+
+    // map.colorSpace = THREE.SRGBColorSpace;
+    // const specularMap = textureLoader.load(
+    //   "https://threejs.org/examples/models/gltf/LeePerrySmith/Map-SPEC.jpg"
+    // );
+    // const normalMap = textureLoader.load(
+    //   "https://threejs.org/examples/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg"
+    // );
 
     const loader = new GLTFLoader();
 
-    loader.load(
-      "https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb",
-      function (gltf) {
-        mesh = gltf.scene.children[0];
-        mesh.material = new THREE.MeshPhongMaterial({
-          specular: 0x111111,
-          map: map,
-          specularMap: specularMap,
-          normalMap: normalMap,
-          shininess: 25,
-        });
+    loader.load(gltfUrl, function (gltf) {
+      mesh = gltf.scene.children[0];
+      mesh.material = new THREE.MeshPhongMaterial({
+        specular: 0x111111,
+        // map: map,
+        // specularMap: specularMap,
+        // normalMap: normalMap,
+        shininess: 25,
+      });
 
-        scene.add(mesh);
-        mesh.scale.set(10, 10, 10);
-      }
-    );
+      scene.add(mesh);
+      mesh.scale.set(10, 10, 10);
+    });
   }
 
   function removeDecals() {
