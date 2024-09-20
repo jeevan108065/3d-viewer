@@ -20,6 +20,7 @@ const LandingPage: React.FC = ({}) => {
   //#region Component states
   const [selectedObj, setSelectedObj] = React.useState<string>();
   const [selectedScale, setSelectedScale] = React.useState<number>();
+  const [selectedUser, setSelectedUser] = React.useState<string>("");
 
   const cardsList = [
     {
@@ -27,18 +28,21 @@ const LandingPage: React.FC = ({}) => {
       title: "FACE",
       obj: `${window.location.origin}/3d-viewer/Assets/models/face/LeePerrySmith.glb`,
       scale: 10,
+      name: "Akhil Kumar",
     },
     {
       image: leg,
       title: "LEG",
-      obj: `${window.location.origin}/3d-viewer/Assets/models/leg/leg_prosthesis.glb`,
-      scale: -1,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/leg/leg_dec_2016.glb`,
+      scale: 30,
+      name: "Rahul",
     },
     {
       image: hand,
       title: "HAND",
       obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
       scale: 50,
+      name: "Vinod",
     },
   ];
   //#endregion
@@ -85,6 +89,7 @@ const LandingPage: React.FC = ({}) => {
                 onClick={() => {
                   setSelectedObj(item.obj);
                   setSelectedScale(item.scale);
+                  setSelectedUser(item.name);
                 }}
               />
             );
@@ -94,7 +99,11 @@ const LandingPage: React.FC = ({}) => {
       {selectedObj && (
         <div>
           <TrackingComponent />
-          <ThreeDViewer gltfUrl={selectedObj} scale={selectedScale} />
+          <ThreeDViewer
+            gltfUrl={selectedObj}
+            scale={selectedScale}
+            title={selectedUser}
+          />
           <button
             style={{ position: "absolute", top: "3.5rem", right: "1rem" }}
             onClick={() => setSelectedObj(undefined)}

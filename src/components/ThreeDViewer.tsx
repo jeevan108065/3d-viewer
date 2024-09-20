@@ -8,9 +8,14 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import { type GLTF } from "three-stdlib";
 import { type ObjectMap } from "@react-three/fiber";
 
-const ThreeDViewer: React.FC<{ gltfUrl?: string; scale?: number }> = ({
+const ThreeDViewer: React.FC<{
+  gltfUrl?: string;
+  scale?: number;
+  title: string;
+}> = ({
   gltfUrl = "https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb",
   scale = 10,
+  title,
 }) => {
   let mesh: any;
   let line: THREE.Line;
@@ -20,6 +25,20 @@ const ThreeDViewer: React.FC<{ gltfUrl?: string; scale?: number }> = ({
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   const raycaster = new THREE.Raycaster();
   const mountRef = useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const gui = new GUI();
+
+    // gui.add(params, "minScale", 1, 30);
+    // gui.add(params, "maxScale", 1, 30);
+    // gui.add(params, "rotate");
+    // gui.add(params, "clear");
+    gui.title(title);
+    gui.open();
+    return () => {
+      gui.destroy();
+    }
+  }, []);
 
   React.useEffect(() => {
     console.log(gltfUrl);
@@ -182,14 +201,6 @@ const ThreeDViewer: React.FC<{ gltfUrl?: string; scale?: number }> = ({
         intersection.intersects = false;
       }
     }
-
-    // const gui = new GUI();
-
-    // gui.add(params, "minScale", 1, 30);
-    // gui.add(params, "maxScale", 1, 30);
-    // gui.add(params, "rotate");
-    // gui.add(params, "clear");
-    // gui.open();
   }
 
   function loadLeePerrySmith() {
