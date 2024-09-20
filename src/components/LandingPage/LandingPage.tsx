@@ -9,6 +9,7 @@ import ThreeDViewer from "../ThreeDViewer";
 import { useGLTF } from "@react-three/drei";
 import { type GLTF } from "three-stdlib";
 import { type ObjectMap } from "@react-three/fiber";
+import TrackingComponent from "../Tracking/TrackingComponent";
 //#endregion
 
 //#region interfaces & types
@@ -18,22 +19,26 @@ import { type ObjectMap } from "@react-three/fiber";
 const LandingPage: React.FC = ({}) => {
   //#region Component states
   const [selectedObj, setSelectedObj] = React.useState<string>();
+  const [selectedScale, setSelectedScale] = React.useState<number>();
 
   const cardsList = [
     {
       image: face,
       title: "FACE",
       obj: `${window.location.origin}/3d-viewer/Assets/models/face/LeePerrySmith.glb`,
+      scale: 10,
     },
     {
       image: leg,
       title: "LEG",
       obj: `${window.location.origin}/3d-viewer/Assets/models/leg/leg_prosthesis.glb`,
+      scale: -1,
     },
     {
       image: hand,
       title: "HAND",
       obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
+      scale: 50,
     },
   ];
   //#endregion
@@ -77,7 +82,10 @@ const LandingPage: React.FC = ({}) => {
               <Card
                 imageUrl={item.image}
                 title={item.title}
-                onClick={() => setSelectedObj(item.obj)}
+                onClick={() => {
+                  setSelectedObj(item.obj);
+                  setSelectedScale(item.scale);
+                }}
               />
             );
           })}
@@ -85,7 +93,8 @@ const LandingPage: React.FC = ({}) => {
       )}
       {selectedObj && (
         <div>
-          <ThreeDViewer gltfUrl={selectedObj} />
+          <TrackingComponent />
+          <ThreeDViewer gltfUrl={selectedObj} scale={selectedScale} />
           <button
             style={{ position: "absolute", top: "3.5rem", right: "1rem" }}
             onClick={() => setSelectedObj(undefined)}

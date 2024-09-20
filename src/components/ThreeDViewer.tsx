@@ -8,8 +8,9 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import { type GLTF } from "three-stdlib";
 import { type ObjectMap } from "@react-three/fiber";
 
-const ThreeDViewer: React.FC<{ gltfUrl?: string }> = ({
+const ThreeDViewer: React.FC<{ gltfUrl?: string; scale?: number }> = ({
   gltfUrl = "https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb",
+  scale = 10,
 }) => {
   let mesh: any;
   let line: THREE.Line;
@@ -99,8 +100,8 @@ const ThreeDViewer: React.FC<{ gltfUrl?: string }> = ({
     camera.position.z = 120;
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 50;
-    controls.maxDistance = 200;
+    controls.minDistance = 10;
+    controls.maxDistance = 2000;
 
     scene.add(new THREE.AmbientLight(0x666666));
 
@@ -163,7 +164,7 @@ const ThreeDViewer: React.FC<{ gltfUrl?: string }> = ({
 
         const n = intersects[0].face.normal.clone();
         n?.transformDirection(mesh.matrixWorld);
-        n?.multiplyScalar(10);
+        n?.multiplyScalar(scale);
         n?.add(intersects[0].point);
 
         intersection.normal.copy(intersects[0].face.normal);
@@ -208,15 +209,15 @@ const ThreeDViewer: React.FC<{ gltfUrl?: string }> = ({
     loader.load(gltfUrl, function (gltf) {
       mesh = gltf.scene.children[0];
       mesh.material = new THREE.MeshPhongMaterial({
-        specular: 0x111111,
+        // color: "whitesmoke",
         // map: map,
         // specularMap: specularMap,
         // normalMap: normalMap,
-        shininess: 25,
+        shininess: 50,
       });
 
       scene.add(mesh);
-      mesh.scale.set(10, 10, 10);
+      mesh.scale.setScalar(scale);
     });
   }
 
