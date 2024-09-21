@@ -139,7 +139,6 @@ const Login: React.FC = ({}) => {
                 weight: "semibold",
                 size: "medium",
               }}
-              validationMessage={errorText}
             >
               <Input
                 onChange={(_ev, data) => {

@@ -17,6 +17,7 @@ import {
   CardPreview,
   makeStyles,
 } from "@fluentui/react-components";
+import PatientDetails from "../PatientDetails/PatientDetails";
 //#endregion
 
 //#region interfaces & types
@@ -120,7 +121,8 @@ const LandingPage: React.FC = ({}) => {
           padding: "0.5rem",
         }}
       >
-        {!selectedObj &&
+        <PatientDetails />
+        {selectedObj &&
           cardsList.map((item) => {
             return (
               <Card
