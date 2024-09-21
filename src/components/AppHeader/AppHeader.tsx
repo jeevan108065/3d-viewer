@@ -10,6 +10,7 @@ import {
 import { CubeRegular } from "@fluentui/react-icons";
 import React from "react";
 import User from "../UserPage/User";
+import { ReactComponent as AppLogo } from "../../Assets/white-logo-2.svg";
 //#endregion
 
 //#region interfaces & types
@@ -67,13 +68,14 @@ const AppHeader: React.FC = ({}) => {
   return (
     <Card className={classNames.card}>
       <CardHeader
-        image={<CubeRegular fontSize={36} />}
-        header={
-          <Body1>
-            <b>{"{Application Name}"}</b>
-          </Body1>
-        }
-        description={<Caption1>{"Application caption"}</Caption1>}
+        image={<AppLogo style={{ height: "3rem" }} />}
+        // image={<CubeRegular fontSize={36} />}
+        // header={
+        //   <Body1>
+        //     <b>{"{Application Name}"}</b>
+        //   </Body1>
+        // }
+        // description={<Caption1>{"Application caption"}</Caption1>}
       />
       <User
         color="colorful"
