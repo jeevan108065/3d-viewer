@@ -18,6 +18,12 @@ import {
   HandRightRegular,
 } from "@fluentui/react-icons";
 import React from "react";
+import PatientEntryDialog from "./PatientEntryDialog";
+import PatientViewDialog from "./PatientViewDialog";
+import face from "../../Assets/models/face/preview.png";
+import leg from "../../Assets/models/leg/preview.png";
+import hand from "../../Assets/models/hand/preview.png";
+import ThreeDViewer from "../ThreeDViewer";
 //#endregion
 
 //#region interfaces & types
@@ -57,7 +63,7 @@ const items = [
     name: { label: "Akhil Kumar Soleti", status: "available" },
     age: { label: "43" },
     recordType: {
-      label: "Body",
+      label: "Unknown",
       icon: <DocumentQuestionMarkRegular />,
     },
   },
@@ -68,11 +74,43 @@ const items = [
 const PatientDetails: React.FC = ({}) => {
   //#region Component states
   const [selectedRecord, setSelectedRecord] = React.useState<string>();
+  const [selectedObj, setSelectedObj] = React.useState<{
+    id: string;
+    image: string;
+    obj: string;
+    scale: number;
+  }>();
   const columns = [
     { columnKey: "id", label: "Id" },
     { columnKey: "name", label: "Patient Name" },
     { columnKey: "age", label: "Age" },
     { columnKey: "recordType", label: "Type of Record" },
+  ];
+
+  const objList: {
+    id: string;
+    image: string;
+    obj: string;
+    scale: number;
+  }[] = [
+    {
+      id: "3",
+      image: face,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/face/LeePerrySmith.glb`,
+      scale: 10,
+    },
+    {
+      id: "4",
+      image: leg,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/leg/leg_dec_2016.glb`,
+      scale: 30,
+    },
+    {
+      id: "1",
+      image: hand,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
+      scale: 50,
+    },
   ];
   //#endregion
 
@@ -127,6 +165,11 @@ const PatientDetails: React.FC = ({}) => {
               appearance={item.id.label === selectedRecord ? "neutral" : "none"}
               onClick={() => {
                 setSelectedRecord(item.id.label);
+                setSelectedObj(
+                  objList.find(
+                    (obj) => obj.id === item.id.label || obj.id === "1"
+                  ) ?? objList[0]
+                );
               }}
               onDoubleClick={() => {
                 setSelectedRecord(undefined);
@@ -171,10 +214,21 @@ const PatientDetails: React.FC = ({}) => {
           gap: "0.5rem",
         }}
       >
-        <Button appearance="primary">{"Create New Record"}</Button>
-        <Button appearance="secondary" disabled={!selectedRecord}>
-          {"View Record"}
-        </Button>
+        <PatientEntryDialog />
+        <PatientViewDialog
+          actionButtonProps={{
+            disabled: !selectedRecord,
+            children: "View Record",
+          }}
+          id={selectedRecord ?? "1"}
+          name={
+            items.find((item) => item.id.label === selectedRecord)?.name
+              .label ?? ""
+          }
+          objData={selectedObj}
+        >
+          <ThreeDViewer gltfUrl={selectedObj?.obj} scale={selectedObj?.scale} />
+        </PatientViewDialog>
       </div>
     </div>
   );

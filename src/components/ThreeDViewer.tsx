@@ -11,11 +11,13 @@ import { type ObjectMap } from "@react-three/fiber";
 const ThreeDViewer: React.FC<{
   gltfUrl?: string;
   scale?: number;
-  title: string;
+  title?: string;
+  onRefChange?: (obj: React.RefObject<HTMLDivElement>) => void;
 }> = ({
   gltfUrl = "https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb",
   scale = 10,
   title,
+  onRefChange,
 }) => {
   let mesh: any;
   let line: THREE.Line;
@@ -27,17 +29,20 @@ const ThreeDViewer: React.FC<{
   const mountRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    const gui = new GUI();
+    let gui: GUI;
+    if (title) {
+      gui = new GUI();
 
-    // gui.add(params, "minScale", 1, 30);
-    // gui.add(params, "maxScale", 1, 30);
-    // gui.add(params, "rotate");
-    // gui.add(params, "clear");
-    gui.title(title);
-    gui.open();
-    return () => {
-      gui.destroy();
+      // gui.add(params, "minScale", 1, 30);
+      // gui.add(params, "maxScale", 1, 30);
+      // gui.add(params, "rotate");
+      // gui.add(params, "clear");
+      gui.title(title);
+      gui.open();
     }
+    return () => {
+      gui?.destroy();
+    };
   }, []);
 
   React.useEffect(() => {
@@ -52,6 +57,10 @@ const ThreeDViewer: React.FC<{
       mountRef.current?.removeChild(renderer.domElement);
     };
   }, [gltfUrl]);
+
+  React.useEffect(() => {
+    onRefChange?.(mountRef);
+  }, [mountRef]);
 
   const intersection = {
     intersects: false,
@@ -101,12 +110,12 @@ const ThreeDViewer: React.FC<{
 
   function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(700, 500);
     renderer.setAnimationLoop(animate);
     mountRef.current?.appendChild(renderer.domElement);
 
     stats = new Stats();
-    mountRef.current?.appendChild(stats.dom);
+    // mountRef.current?.appendChild(stats.dom);
 
     scene = new THREE.Scene();
 
@@ -252,7 +261,7 @@ const ThreeDViewer: React.FC<{
     stats.update();
   }
 
-  return <div ref={mountRef}></div>;
+  return <div style={{ width: "100%", height: "100%" }} ref={mountRef}></div>;
 };
 
 export default ThreeDViewer;
