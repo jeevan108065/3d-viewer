@@ -4,15 +4,45 @@ import AppHeader from "../AppHeader/AppHeader";
 import face from "../../Assets/models/face/preview.png";
 import leg from "../../Assets/models/leg/preview.png";
 import hand from "../../Assets/models/hand/preview.png";
-import Card from "../Card/Card";
 import ThreeDViewer from "../ThreeDViewer";
 import { useGLTF } from "@react-three/drei";
 import { type GLTF } from "three-stdlib";
 import { type ObjectMap } from "@react-three/fiber";
 import TrackingComponent from "../Tracking/TrackingComponent";
+import {
+  Body1,
+  Caption1,
+  Card,
+  CardHeader,
+  CardPreview,
+  makeStyles,
+} from "@fluentui/react-components";
 //#endregion
 
 //#region interfaces & types
+//#endregion
+
+//#region Component Styles
+const useStyles = makeStyles({
+  root: {
+    width: "100lvw",
+    height: "100lvh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card: {
+    padding: "1rem",
+    width: "12rem",
+    height: "12rem",
+    maxWidth: "100%",
+  },
+  previewContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+});
 //#endregion
 
 //#region Function Component
@@ -61,6 +91,7 @@ const LandingPage: React.FC = ({}) => {
   //#endregion
 
   //#region Component Styles
+  const classNames = useStyles();
   //#endregion
 
   //#region Component validation methods
@@ -77,41 +108,65 @@ const LandingPage: React.FC = ({}) => {
 
   //#region Component renders
   return (
-    <div>
+    <div style={{ width: "100%", height: "100lvh" }}>
       <AppHeader />
-      {!selectedObj && (
-        <div style={{ display: "flex" }}>
-          {cardsList.map((item) => {
+      <div
+        style={{
+          display: "flex",
+          gap: "0.5rem",
+          rowGap: "0.5rem",
+          width: "100%",
+          height: "100%",
+          padding: "0.5rem",
+        }}
+      >
+        {!selectedObj &&
+          cardsList.map((item) => {
             return (
               <Card
-                imageUrl={item.image}
-                title={item.title}
+                className={classNames.card}
                 onClick={() => {
                   setSelectedObj(item.obj);
                   setSelectedScale(item.scale);
                   setSelectedUser(item.name);
                 }}
-              />
+              >
+                <CardHeader
+                  header={
+                    <Body1>
+                      <b>{item.title}</b>
+                    </Body1>
+                  }
+                  description={<Caption1>{item.name}</Caption1>}
+                />
+
+                <CardPreview className={classNames.previewContainer}>
+                  <img
+                    src={item.image}
+                    alt="sample img"
+                    style={{ height: "7rem" }}
+                  />
+                </CardPreview>
+              </Card>
             );
           })}
-        </div>
-      )}
-      {selectedObj && (
-        <div>
-          <TrackingComponent />
-          <ThreeDViewer
-            gltfUrl={selectedObj}
-            scale={selectedScale}
-            title={selectedUser}
-          />
-          <button
-            style={{ position: "absolute", top: "3.5rem", right: "1rem" }}
-            onClick={() => setSelectedObj(undefined)}
-          >
-            {"Close Model"}
-          </button>
-        </div>
-      )}
+        {selectedObj && (
+          <div>
+            <TrackingComponent />
+            <ThreeDViewer
+              gltfUrl={selectedObj}
+              scale={selectedScale}
+              title={selectedUser}
+            />
+            <button
+              style={{ position: "absolute", top: "3.5rem", right: "1rem" }}
+              onClick={() => setSelectedObj(undefined)}
+            >
+              {"Close Model"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
   //#endregion

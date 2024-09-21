@@ -1,8 +1,32 @@
 //#region imports
+import {
+  Avatar,
+  Body1,
+  Caption1,
+  Card,
+  CardHeader,
+  makeStyles,
+} from "@fluentui/react-components";
+import { CubeRegular } from "@fluentui/react-icons";
 import React from "react";
+import User from "../UserPage/User";
 //#endregion
 
 //#region interfaces & types
+//#endregion
+
+//#region Component Styles
+const useStyles = makeStyles({
+  card: {
+    margin: "0",
+    width: "100lvw",
+    maxWidth: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+});
 //#endregion
 
 //#region Function Component
@@ -24,36 +48,7 @@ const AppHeader: React.FC = ({}) => {
   //#endregion
 
   //#region Component Styles
-  const AppHeaderRootDivStyles: React.CSSProperties = {
-    height: "3rem",
-    width: "100lvw",
-    position: "sticky",
-    boxShadow: "0px 0px 5px 0px grey",
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: "1rem",
-    justifyContent: "space-between"
-  };
-
-  const ApplicationNameStyles: React.CSSProperties = {
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: "1rem",
-    minWidth: "20lvw",
-  };
-
-  const UserProfile: React.CSSProperties = {
-    width: "2rem",
-    aspectRatio: "1",
-    borderRadius: "50%",
-    backgroundColor: "grey",
-    content: "U",
-    float: "right",
-    marginRight: "2.5rem",
-    textAlign: "center",
-    fontSize: "1.5rem",
-    fontWeight: "bold"
-  };
+  const classNames = useStyles();
   //#endregion
 
   //#region Component validation methods
@@ -70,12 +65,23 @@ const AppHeader: React.FC = ({}) => {
 
   //#region Component renders
   return (
-    <div style={AppHeaderRootDivStyles}>
-      <div>
-        <span style={ApplicationNameStyles}>{"{ Application Name }"}</span>
-      </div>
-      <span style={UserProfile}>{"U"}</span>
-    </div>
+    <Card className={classNames.card}>
+      <CardHeader
+        image={<CubeRegular fontSize={36} />}
+        header={
+          <Body1>
+            <b>{"{Application Name}"}</b>
+          </Body1>
+        }
+        description={<Caption1>{"Application caption"}</Caption1>}
+      />
+      <User
+        color="colorful"
+        activeAppearance="ring-shadow"
+        active="active"
+        name="User"
+      />
+    </Card>
   );
   //#endregion
 };
