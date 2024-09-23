@@ -10,7 +10,7 @@ const TrackingComponent: React.FC = () => {
   const containerStyle: React.CSSProperties = {
     position: "fixed",
     bottom: "10px",
-    right: "10px",
+    left: "10px",
     width: "300px",
     backgroundColor: "grey",
     border: "1px solid #ccc",
