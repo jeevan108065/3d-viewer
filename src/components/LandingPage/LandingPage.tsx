@@ -71,7 +71,7 @@ const LandingPage: React.FC = ({}) => {
     {
       image: hand,
       title: "HAND",
-      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/Pattern.stl`,
       scale: 50,
       name: "Vinod",
     },

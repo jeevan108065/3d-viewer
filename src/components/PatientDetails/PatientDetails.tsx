@@ -36,8 +36,8 @@ const items = [
     name: { label: "Rejendra Prasad", status: "available" },
     age: { label: "43" },
     recordType: {
-      label: "Right Hand",
-      icon: <HandRightRegular />,
+      label: "Right Foot",
+      icon: <DocumentQuestionMarkRegular />,
     },
   },
   {
@@ -108,8 +108,8 @@ const PatientDetails: React.FC = ({}) => {
     {
       id: "1",
       image: hand,
-      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/hand.glb`,
-      scale: 50,
+      obj: `${window.location.origin}/3d-viewer/Assets/models/hand/Pattern.stl`,
+      scale: 1,
     },
   ];
   //#endregion

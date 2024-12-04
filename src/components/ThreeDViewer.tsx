@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GUI } from "lil-gui";
 import { DecalGeometry } from "three/examples/jsm/geometries/DecalGeometry";
@@ -223,22 +224,43 @@ const ThreeDViewer: React.FC<{
     // const normalMap = textureLoader.load(
     //   "https://threejs.org/examples/models/gltf/LeePerrySmith/Infinite-Level_02_Tangent_SmoothUV.jpg"
     // );
+    if (gltfUrl.includes(".stl")) {
+      const loader = new STLLoader();
 
-    const loader = new GLTFLoader();
+      // Load the STL file
+      loader.load(gltfUrl, function (geometry) {
+        // Create a mesh using MeshPhongMaterial
+        const material = new THREE.MeshPhongMaterial({
+          color: "whitesmoke", // Adjust color as needed
+          shininess: 50, // Adjust shininess for the material
+        });
 
-    loader.load(gltfUrl, function (gltf) {
-      mesh = gltf.scene.children[0];
-      mesh.material = new THREE.MeshPhongMaterial({
-        // color: "whitesmoke",
-        // map: map,
-        // specularMap: specularMap,
-        // normalMap: normalMap,
-        shininess: 50,
+        // Create the mesh using the loaded geometry and material
+        const mesh = new THREE.Mesh(geometry, material);
+
+        // Add the mesh to the scene
+        scene.add(mesh);
+
+        // Apply scaling
+        mesh.scale.setScalar(scale);
       });
+    } else {
+      const loader = new GLTFLoader();
 
-      scene.add(mesh);
-      mesh.scale.setScalar(scale);
-    });
+      loader.load(gltfUrl, function (gltf) {
+        mesh = gltf.scene.children[0];
+        mesh.material = new THREE.MeshPhongMaterial({
+          // color: "whitesmoke",
+          // map: map,
+          // specularMap: specularMap,
+          // normalMap: normalMap,
+          shininess: 50,
+        });
+
+        scene.add(mesh);
+        mesh.scale.setScalar(scale);
+      });
+    }
   }
 
   function removeDecals() {
